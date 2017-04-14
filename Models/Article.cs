@@ -16,6 +16,7 @@ namespace ASP.NET_Blog.Models
             this.Date = DateTime.Now;
         }
         
+        
         [Key]
         public int Id { get; set; }
 
@@ -31,5 +32,10 @@ namespace ASP.NET_Blog.Models
         public string AuthorId { get; set; }
 
         public virtual ApplicationUser Author { get; set; }
+
+        public bool IsAuthor(string name)
+        {
+            return this.Author.UserName.Equals(name);
+        }
     }
 }

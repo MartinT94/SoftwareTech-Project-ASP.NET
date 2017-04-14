@@ -53,12 +53,14 @@ namespace ASP.NET_Blog.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Create(Article article)
         {
             if (ModelState.IsValid)
@@ -98,6 +100,11 @@ namespace ASP.NET_Blog.Controllers
                     .Include(a => a.Author)
                     .First();
 
+                if (!IsUserAuthorizedToEdit(article))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
+
                 if (article == null)
                 {
                     return HttpNotFound();
@@ -128,7 +135,7 @@ namespace ASP.NET_Blog.Controllers
                 {
                     return HttpNotFound();
                 }
-
+                
                 database.Articles.Remove(article);
                 database.SaveChanges();
 
@@ -151,6 +158,11 @@ namespace ASP.NET_Blog.Controllers
                 var article = database.Articles
                     .Where(a => a.Id == id)
                     .First();
+
+                if (!IsUserAuthorizedToEdit(article))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                }
 
                 if (article == null)
                 {
@@ -189,6 +201,14 @@ namespace ASP.NET_Blog.Controllers
             }
 
             return View(model);
+        }
+
+        private bool IsUserAuthorizedToEdit(Article article)
+        {
+            bool isAdmin = this.User.IsInRole("Admin");
+            bool isAuthor = article.IsAuthor(this.User.Identity.Name);
+
+            return isAdmin || isAuthor;
         }
     }
 }

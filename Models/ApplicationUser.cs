@@ -16,6 +16,8 @@ namespace ASP.NET_Blog.Models
         [Required]
         public string FullName { get; set; }
 
+        public byte[] UserPhoto { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             
