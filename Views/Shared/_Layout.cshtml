@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Todorov's Blog</title>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/Custom.css")
     @Scripts.Render("~/bundles/modernizr")
@@ -17,7 +17,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("SOFTUNI BLOG", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Todorov's Blog", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 @Html.Partial("_LoginPartial")
@@ -27,7 +27,7 @@
     <div class="container body-content">
         @RenderBody()
         <footer class="pull-right">
-            <p>&copy; @DateTime.Now.Year - SoftUni Blog</p>
+            <p>&copy; @DateTime.Now.Year - Todorov's Blog</p>
         </footer>
     </div>
 

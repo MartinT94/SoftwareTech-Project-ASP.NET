@@ -153,7 +153,7 @@ namespace ASP.NET_Blog.Controllers
             if (ModelState.IsValid)
             {
                 byte[] imageData = null;
-                if (Request.Files.Count > 0)
+                if (Request.Files.Count > 0 && Request.Files["UserPhoto"].ContentLength > 0)
                 {
                     HttpPostedFileBase poImgFile = Request.Files["UserPhoto"];
 

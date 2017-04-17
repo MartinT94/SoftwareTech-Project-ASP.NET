@@ -16,3 +16,16 @@
 .author-name {
     padding: 15px;
 }
+
+.profile-picture {
+    width: 200px;
+    height: 200px;
+}
+
+.comment {
+    background-color: #ccb9ae;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+

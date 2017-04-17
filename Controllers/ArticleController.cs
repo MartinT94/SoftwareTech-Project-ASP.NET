@@ -43,12 +43,31 @@ namespace ASP.NET_Blog.Controllers
                     .Include(a => a.Author)
                     .First();
 
+                
+                var comments = database.Comments
+                    .Where(c => c.ArticleId == id)
+                    .ToList();
+
+                foreach (var comment in comments)
+                {
+                    var user = database.Users
+                        .Where(i => i.Id == comment.AuthorId);
+                        
+                }
+
+                article.Comments = comments;
+
                 if (article == null)
                 {
                     return HttpNotFound();
                 }
 
-                return View(article);
+                
+
+                var tuple = new Tuple<Article, 
+                    Comment>( article,
+                    new Comment());
+                return View(tuple);
             }
         }
 
@@ -201,6 +220,44 @@ namespace ASP.NET_Blog.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult CreateComment(int articleId)
+        {
+            var comment = new Comment();
+
+            comment.ArticleId = articleId;
+
+            return View(comment);
+        }
+
+        [HttpPost]
+        public ActionResult CreateComment(Comment comment)
+        {
+            var db = new BlogDbContext();
+
+            if (ModelState.IsValid)
+            {
+                if (this.User != null)
+                {
+                    var username = this.User.Identity.Name;
+                    var userFromDB = db.Users
+                        .Where(u => u.UserName == username)
+                        .FirstOrDefault();
+
+                    comment.AuthorId = userFromDB.Id;
+                    comment.FullName = userFromDB.FullName;
+                    comment.UserPhoto = userFromDB.UserPhoto;
+                }
+
+                db.Comments.Add(comment);
+                db.SaveChanges();
+
+
+            }
+
+            return RedirectToAction($"Details/{comment.ArticleId}");
         }
 
         private bool IsUserAuthorizedToEdit(Article article)

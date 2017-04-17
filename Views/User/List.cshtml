@@ -18,26 +18,29 @@
             </thead>
 
             <tbody>
-               @foreach (var user in Model)
+                @foreach (var user in Model)
                 {
-                    if (ViewBag.Admins.Contains(user.UserName))
+                    @*if (ViewBag.Admins.Contains(user.UserName))
                     {
-                        @:<tr class="info">
+                        @:
+                        <tr class="info">
                     }
-                    else 
+                    else
                     {
-                        @:<tr>
-                    }
-
+                        @:
+                    <tr>
+                    }*@
+                    <tr>
                     <td>@user.Id</td>
                     <td>@user.Email</td>
                     <td>
                         @Html.ActionLink("Edit", "Edit", "User", new { @id = user.Id }, null)
                         @Html.ActionLink("Delete", "Delete", "User", new { @id = user.Id }, null)
                     </td>
+                        </tr>
                 }
 
-            </tbody>
-        </table>
-    </div>
+        </tbody>
+    </table>
+</div>
 </div>

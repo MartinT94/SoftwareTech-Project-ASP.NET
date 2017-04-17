@@ -1,4 +1,6 @@
-﻿@model ASP.NET_Blog.Models.Article
+﻿@using ASP.NET_Blog.Models;
+@model Tuple<Article, Comment>
+
 
 @{
     ViewBag.Title = "Details";
@@ -8,24 +10,57 @@
     <article>
         <header>
             <h2>
-                @Model.Title
+                @Model.Item1.Title
             </h2>
         </header>
         <p class="word-wrap">
-            @Model.Content
+            @Model.Item1.Content
         </p>
+        <small>
+            @Model.Item1.Date
+            </small>
         <small class="author">
-            --author @Model.Author.FullName
+            Author: @Model.Item1.Author.FullName
         </small>
         <footer class="pull-right">
-            @if (User.IsInRole("Admin") || Model.IsAuthor(User.Identity.Name))
+            @if (User.IsInRole("Admin") || Model.Item1.IsAuthor(User.Identity.Name))
             {
-                @Html.ActionLink("Edit", "Edit", "Article", new { @id = Model.Id }, new { @class = "btn btn-success btn-xs" })
-                @Html.ActionLink("Delete", "Delete", "Article", new { @id = Model.Id }, new { @class = "btn btn-danger btn-xs" })
+                @Html.ActionLink("Edit", "Edit", "Article", new { @id = Model.Item1.Id }, new { @class = "btn btn-success btn-xs" })
+                @Html.ActionLink("Delete", "Delete", "Article", new { @id = Model.Item1.Id }, new { @class = "btn btn-danger btn-xs" })
             }
-            
+
             @Html.ActionLink("Back", "Index", "Article", null, new { @class = "btn btn-default btn-xs" })
         </footer>
     </article>
 </div>
 <hr />
+<div>
+    @Html.ActionLink("Add Comment", "CreateComment", new { @articleId = Model.Item1.Id })
+
+</div>
+@foreach (var comment in Model.Item1.Comments)
+{
+    <div class="col-sm-12">
+        <div class="row author-name">
+            @if (comment.UserPhoto == null)
+            {
+                <img class="userPhoto" src="~/Content/default.jpg" />
+            }
+            else
+            {
+                <img class="userPhoto" src="data:image/gif;base64,@Convert.ToBase64String(comment.UserPhoto)" />
+            }
+
+            <small class="author author-name">
+                @comment.FullName
+            </small>
+        </div>
+        <div class="row comment">
+            <p class="word-wrap">
+                @comment.Content
+            </p>
+        </div>
+    </div>
+}
+
+

@@ -1,0 +1,11 @@
+﻿@model ASP.NET_Blog.Models.Comment
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <div class="container">
+        <h2> Add Comment </h2>
+        @Html.TextAreaFor(model => model.Content)
+        <input id="addComment" type="submit" value="Add" />
+    </div>
+}

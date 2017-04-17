@@ -6,7 +6,7 @@
 
 <div class="container">
     <div class="row">
-        @foreach (var article in Model)
+        @foreach (var article in Model.OrderByDescending(d => d.Date))
         {
             <div class="col-sm-6">
                 <article>
@@ -28,7 +28,14 @@
                     <footer>
                         <div class="pull-left">
                             <div class="pull-left">
-                                <img class="userPhoto" src="data:image/gif;base64,@Convert.ToBase64String(article.Author.UserPhoto)" />
+                                @if (article.Author.UserPhoto == null)
+                                {
+                                    <img class="userPhoto" src="~/Content/default.jpg" />
+                                }
+                                else
+                                {
+                                    <img class="userPhoto" src="data:image/gif;base64,@Convert.ToBase64String(article.Author.UserPhoto)" />
+                                }
                             </div>
                             <div class="pull-right author-name">
                                 <small class="author">
