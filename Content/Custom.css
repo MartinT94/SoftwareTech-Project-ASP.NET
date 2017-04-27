@@ -8,7 +8,28 @@
     padding: 0px;
     box-shadow: 0px 0px 20px #888;
 }
-
+.no-results {
+    background-color: #f4b33d;
+    top: 50px;
+    position: relative;
+}
+.footer {
+    position: fixed;
+    width: 100%;
+    bottom: 10px;
+    right: 15px;
+}
+.article-title {
+    text-decoration: underline;
+}
+.article-content {
+    background-color: #d4e0e4;
+    border-radius: 5px;
+    padding: 5px;
+}
+.search-input {
+    width: 100%;
+}
 .word-wrap {
     word-wrap: break-word;
 }
@@ -18,7 +39,7 @@
 }
 
 .profile-picture {
-    width: 200px;
+    width: 350px;
     height: 200px;
 }
 

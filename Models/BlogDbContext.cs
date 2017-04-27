@@ -17,6 +17,8 @@ namespace ASP.NET_Blog.Models
         public virtual IDbSet<Article> Articles { get; set; }
 
         public virtual IDbSet<Comment> Comments { get; set; }
+        
+        public virtual IDbSet<Category> Categories { get; set; }
 
         public static BlogDbContext Create()
         {

@@ -6,6 +6,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ASP.NET_Blog.Models;
+using System.IO;
 
 namespace ASP.NET_Blog.Controllers
 {
@@ -16,17 +17,45 @@ namespace ASP.NET_Blog.Controllers
         {
             return RedirectToAction("List");
         }
+        [HttpPost]
+        [Authorize]
+        public ActionResult Search()
+        {
+            
+            using (var database = new BlogDbContext())
+            {
+                string search = Request["Search"];
+                List<Article> articles = database.Articles
+                        .Where(a => a.Tags.Contains(search))
+                        .Include(a => a.Author)
+                        .ToList();
+             
+                return View(new Tuple<List<Article>, string>(articles, search));
+            }
+        }
 
         public ActionResult List()
         {
             using (var database = new BlogDbContext())
             {
-                var articles = database.Articles
-                    .Include(a => a.Author)
-                    .ToList();
+                string categoryName = Request.QueryString.Get("category");
+                List<Article> articles = null;
+                if (categoryName != null)
+                {
+                    articles = database.Articles
+                        .Where(a => a.CategoryName == categoryName)
+                        .Include(a => a.Author)
+                        .ToList();
+                }
+                else
+                {
+                    articles = database.Articles
+                        .Include(a => a.Author)
+                        .ToList();
+                }
                 return View(articles);
             }
-            
+
         }
 
         public ActionResult Details(int? id)
@@ -43,7 +72,10 @@ namespace ASP.NET_Blog.Controllers
                     .Include(a => a.Author)
                     .First();
 
-                
+                article.VisitingCount++;
+                database.SaveChanges();
+
+
                 var comments = database.Comments
                     .Where(c => c.ArticleId == id)
                     .ToList();
@@ -52,7 +84,7 @@ namespace ASP.NET_Blog.Controllers
                 {
                     var user = database.Users
                         .Where(i => i.Id == comment.AuthorId);
-                        
+
                 }
 
                 article.Comments = comments;
@@ -61,13 +93,8 @@ namespace ASP.NET_Blog.Controllers
                 {
                     return HttpNotFound();
                 }
-
                 
-
-                var tuple = new Tuple<Article, 
-                    Comment>( article,
-                    new Comment());
-                return View(tuple);
+                return View(new Tuple<Article, Comment>(article, new Comment()));
             }
         }
 
@@ -75,7 +102,15 @@ namespace ASP.NET_Blog.Controllers
         [Authorize]
         public ActionResult Create()
         {
-            return View();
+            using (var database = new BlogDbContext())
+            {
+                var categories = database.Categories
+                   .ToList();
+                var tuple = new Tuple<Article,
+                       List<Category>>(new Article(),
+                       categories);
+                return View(tuple);
+            }
         }
 
         [HttpPost]
@@ -154,7 +189,7 @@ namespace ASP.NET_Blog.Controllers
                 {
                     return HttpNotFound();
                 }
-                
+
                 database.Articles.Remove(article);
                 database.SaveChanges();
 
@@ -162,7 +197,7 @@ namespace ASP.NET_Blog.Controllers
             }
         }
 
-        
+
         [HttpGet]
         public ActionResult Edit(int? id)
         {
@@ -223,6 +258,7 @@ namespace ASP.NET_Blog.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult CreateComment(int articleId)
         {
             var comment = new Comment();
@@ -233,6 +269,7 @@ namespace ASP.NET_Blog.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult CreateComment(Comment comment)
         {
             var db = new BlogDbContext();

@@ -1,11 +1,26 @@
 ﻿@model ASP.NET_Blog.Models.Comment
 
-@using (Html.BeginForm())
-{
-    @Html.ValidationSummary(true)
-    <div class="container">
-        <h2> Add Comment </h2>
-        @Html.TextAreaFor(model => model.Content)
-        <input id="addComment" type="submit" value="Add" />
+<div class="container">
+    <div class="well">
+        <h2>Comment</h2>
+        <div class="form-horizontal">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Content, new { @class = "control-label col-sm-4" })
+                    <div class="col-sm-6">
+                        @Html.TextAreaFor(model => model.Content, new { @class = "form-control", @rows = "7" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-4">
+                        @Html.ActionLink("Cancel", "Index", "Article", null, new { @class = "btn btn-default" })
+                        <input id="addComment" type="submit" value="Add" class="btn btn-success" />
+                    </div>
+                </div>
+            }
+        </div>
     </div>
-}
+</div>

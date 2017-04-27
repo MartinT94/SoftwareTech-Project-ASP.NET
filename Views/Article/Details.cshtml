@@ -9,19 +9,30 @@
 <div class="container">
     <article>
         <header>
-            <h2>
+            <h2 class="article-title">
                 @Model.Item1.Title
             </h2>
         </header>
-        <p class="word-wrap">
+        <p class="word-wrap article-content">
             @Model.Item1.Content
         </p>
-        <small>
-            @Model.Item1.Date
-            </small>
         <small class="author">
             Author: @Model.Item1.Author.FullName
         </small>
+        <small>
+            Created: @Model.Item1.Date
+        </small><br />
+        <small><br />
+            Category: @Model.Item1.CategoryName
+            </small>
+        <small>
+            <br />
+            Tags: @Model.Item1.Tags
+        </small><br />
+        <small>
+            Viewed: @Model.Item1.VisitingCount
+        </small>
+    
         <footer class="pull-right">
             @if (User.IsInRole("Admin") || Model.Item1.IsAuthor(User.Identity.Name))
             {
@@ -34,31 +45,34 @@
     </article>
 </div>
 <hr />
-<div>
-    @Html.ActionLink("Add Comment", "CreateComment", new { @articleId = Model.Item1.Id })
+<div class="container">
+
+    @Html.ActionLink("Add Comment", "CreateComment", new { @articleId = Model.Item1.Id }, new { @class = "btn btn-success btn-x" })
 
 </div>
 @foreach (var comment in Model.Item1.Comments)
 {
-    <div class="col-sm-12">
-        <div class="row author-name">
-            @if (comment.UserPhoto == null)
-            {
-                <img class="userPhoto" src="~/Content/default.jpg" />
-            }
-            else
-            {
-                <img class="userPhoto" src="data:image/gif;base64,@Convert.ToBase64String(comment.UserPhoto)" />
-            }
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="row author-name">
+                @if (comment.UserPhoto == null)
+                {
+                    <img class="userPhoto" src="~/Content/default.jpg" />
+                }
+                else
+                {
+                    <img class="userPhoto" src="data:image/gif;base64,@Convert.ToBase64String(comment.UserPhoto)" />
+                }
 
-            <small class="author author-name">
-                @comment.FullName
-            </small>
-        </div>
-        <div class="row comment">
-            <p class="word-wrap">
-                @comment.Content
-            </p>
+                <small class="author author-name">
+                    @comment.FullName
+                </small>
+            </div>
+            <div class="row comment">
+                <p class="word-wrap">
+                    @comment.Content
+                </p>
+            </div>
         </div>
     </div>
 }

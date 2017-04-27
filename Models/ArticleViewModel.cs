@@ -19,7 +19,8 @@ namespace ASP.NET_Blog.Models
 
         public string AuthorId { get; set; }
 
-        
+        public string CategoryId { get; set; }
+
 
     }
 }

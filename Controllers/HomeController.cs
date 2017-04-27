@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -14,7 +15,22 @@ namespace ASP.NET_Blog.Controllers
     {
         public ActionResult Index()
         {
-            return RedirectToAction("List", "Article");
+            using (var database = new BlogDbContext())
+            {
+                var articles = database.Articles
+                    .Include(a => a.Author)
+                    .OrderByDescending(a => a.Date).Take(6)
+                    .ToList();
+                var categories = database.Categories
+                    .ToList();
+
+                var tuple = new Tuple<List<Article>,
+                    List<Category>>(articles,
+                    categories);
+                return View(tuple);
+                
+            }
+
         }
 
         public FileContentResult UserPhotos()
@@ -40,8 +56,6 @@ namespace ASP.NET_Blog.Controllers
                     return File(imageData, "image/png");
 
                 }
-                
-                
 
                 return new FileContentResult(userImage.UserPhoto, "image/jpeg");
             }
