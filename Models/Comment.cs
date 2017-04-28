@@ -9,7 +9,11 @@ namespace ASP.NET_Blog.Models
 {
     public class Comment
     {
-        
+        public  Comment()
+        {
+            this.Date = DateTime.Now;
+        }
+
         public int Id { get; set; }
         [Required]
         public string Content { get; set; }
@@ -17,6 +21,8 @@ namespace ASP.NET_Blog.Models
         public string AuthorId { get; set; }
 
         public int ArticleId { get; set; }
+
+        public DateTime Date { get; set; }
 
         public string FullName { get; set; }
 

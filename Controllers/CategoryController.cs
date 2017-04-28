@@ -14,6 +14,7 @@ namespace ASP.NET_Blog.Controllers
         public ActionResult Index()
         {
             return View();
+            
         }
 
         [HttpGet]
